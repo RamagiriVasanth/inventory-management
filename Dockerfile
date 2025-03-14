@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy the current directory contents into the container
 COPY . /app
 
+# Make the mvnw file executable
+RUN chmod +x mvnw
+
 # Build the application using Maven
 RUN ./mvnw clean install
 
