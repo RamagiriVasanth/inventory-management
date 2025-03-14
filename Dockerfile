@@ -1,20 +1,14 @@
-# Use a Maven image with OpenJDK 17
-FROM maven:3.8.4-openjdk-17-slim AS builder
+# Use an official Java runtime as a parent image
+FROM openjdk:17-jdk-slim
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the project files to the working directory
-COPY . .
+# Copy the current directory contents into the container
+COPY . /app
 
-# Run Maven to build the project
-RUN mvn clean install
+# Build the application using Maven
+RUN ./mvnw clean install
 
-# Use a Java 17 image to run the application
-FROM openjdk:17-slim
-
-# Copy the built .jar file from the builder stage to the running container
-COPY --from=builder /app/target/inventory-management-0.0.1-SNAPSHOT.jar /inventory-management.jar
-
-# Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "/inventory-management.jar"]
+# Run the application
+CMD ["java", "-jar", "target/inventory-management-0.0.1-SNAPSHOT.jar"]
